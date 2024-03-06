@@ -1,7 +1,7 @@
 import {minify} from 'terser'
 
 // jsをテキストとして取得
-const fileUrls = ["/js/vendor/drawRectangle.js"];
+const fileUrls = ["js/vendor/drawRectangle.js"];
 Promise.all(fileUrls.map(url =>
   fetch(url).then(response => response.text())
 )).then(async responses => {
