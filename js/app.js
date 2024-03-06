@@ -1,5 +1,9 @@
 import {minify} from 'terser'
 
+// 環境変数を取得
+const purl = process.env.PUBLIC_URL;
+console.log(purl); // 'development' or 'production'
+
 // jsをテキストとして取得
 const fileUrls = ["js/vendor/drawRectangle.js"];
 Promise.all(fileUrls.map(url =>
