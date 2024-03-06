@@ -144,10 +144,6 @@ __tt.draggableCircle ||= class DraggableCircle {
   stopResize() {
     if (this.isResizing) {
       this.isResizing = false;
-      // リサイズが終わったらハンドルを隠す、ただしマウスが要素の上にある場合は除く
-      if (!this.el.matches(':hover')) {
-        this.handles.forEach(handle => handle.style.visibility = 'hidden');
-      }
     }
     // イベントハンドラの削除
     document.removeEventListener('mousemove', this.boundResize);
