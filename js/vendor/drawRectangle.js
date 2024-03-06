@@ -223,4 +223,4 @@ __tt.draggableCircle ||= class DraggableCircle {
 }
 
 // 新しい DraggableCircle インスタンスの作成
-__tt[`${Date.now()}`] = new __tt.draggableCircle();
+__tt[`${Date.now()}`] = new __tt.draggableCircle()
