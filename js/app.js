@@ -1,11 +1,8 @@
 import {minify} from 'terser'
 
-// 環境変数を取得
-const purl = process.env.PUBLIC_URL;
-console.log(purl); // 'development' or 'production'
-
 // jsをテキストとして取得
-const fileUrls = ["js/vendor/drawRectangle.js"];
+// github pagesではbase pathが変わることを考慮している TODO: 環境変数にしたい
+const fileUrls = ["js/vendor/drawRectangle.js"].map(path => `${window.location.pathname}${path}`);
 Promise.all(fileUrls.map(url =>
   fetch(url).then(response => response.text())
 )).then(async responses => {
