@@ -5,7 +5,7 @@ __tt.draggableCircle ||= class DraggableCircle {
   isDragging = false
   isResizing = false
   width = 200
-  height = 200
+  height = 80
   mouseX = 0
   mouseY = 0
   boundResize = null
@@ -37,10 +37,10 @@ __tt.draggableCircle ||= class DraggableCircle {
       justifyContent: 'center',
       cursor: 'pointer',
       userSelect: 'none',
-      visibility: 'hidden'
-
+      visibility: 'hidden',
+      fontSize: '24px',
     });
-    this.deleteBtn.textContent = '✖';
+    this.deleteBtn.textContent = '×';
     this.deleteBtn.addEventListener('click', () => {
       this.deleteElement();
     });
@@ -79,20 +79,19 @@ __tt.draggableCircle ||= class DraggableCircle {
       height: "100%",
       border: "4px solid #EC71A1",
       borderRadius: "15px",
-      boxShadow: "0px 10px 30px rgba(0,0,0,0.2)"
+      // boxShadow: "0px 10px 30px rgba(0,0,0,0.2)"
     });
   }
 
   createResizeHandles() {
-    // リサイズハンドルのみ作成
     const handle = document.createElement("div");
     Object.assign(handle.style, {
       position: 'absolute',
       width: '20px',
       height: '20px',
-      bottom: '-8px',
-      right: '-8px',
-      background: 'linear-gradient(135deg, rgba(227,57,78,1) 40%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 60%, rgba(227,57,78,1) 60%)',
+      bottom: '-2px',
+      right: '-2px',
+      background: 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(227,57,78,1) 60%, rgba(227,57,78,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(227,57,78,1) 75%, rgba(227,57,78,1) 85%, rgba(0,0,0,0) 85%)',
       cursor: 'nwse-resize',
       visibility: 'hidden'
     });
@@ -123,11 +122,18 @@ __tt.draggableCircle ||= class DraggableCircle {
       const widthChange = e.clientX - this.mouseX;
       const heightChange = e.clientY - this.mouseY;
       this.width = Math.max(40, this.width + widthChange);
-      this.height = Math.max(40, this.height + heightChange);
+      this.height = Math.max(8, this.height + heightChange);
 
       // スタイルを更新します
       this.updateStyle();
       this.updateEllipseStyle();
+
+      // 高さ20px以下の場合はdeleteBtnを非表示にする
+      if (this.height < 30) {
+        this.deleteBtn.style.visibility = 'hidden';
+      } else {
+        this.deleteBtn.style.visibility = 'visible';
+      }
 
       // 次のイベントのためにマウス位置を保持します
       this.mouseX = e.clientX;
@@ -143,7 +149,7 @@ __tt.draggableCircle ||= class DraggableCircle {
         this.handles.forEach(handle => handle.style.visibility = 'hidden');
       }
     }
-    // イベントハンドラの正しい削除
+    // イベントハンドラの削除
     document.removeEventListener('mousemove', this.boundResize);
     document.removeEventListener('mouseup', this.boundStopResize);
     // 参照をクリア
@@ -197,14 +203,17 @@ __tt.draggableCircle ||= class DraggableCircle {
         this.el.style.opacity = '1'; // ドラッグ終了時の透明度を元に戻す
       }
     });
-    // 要素にカーソルが乗ったときにリサイズハンドルを表示する
+    // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
       this.handles.forEach(handle => {
         handle.style.visibility = 'visible';
       });
-      this.deleteBtn.style.visibility = 'visible'
+      if (this.height >= 30) {
+        this.deleteBtn.style.visibility = 'visible';
+      }
+
     });
-    // 要素からカーソルが離れたときにリサイズハンドルを隠す
+    // 要素からカーソルが離れたときにリサイズハンドル・削除ボタンを隠す
     this.el.addEventListener('mouseleave', () => {
       // リサイズ中でなければハンドルを隠す
       if (!this.isResizing) {
@@ -218,7 +227,7 @@ __tt.draggableCircle ||= class DraggableCircle {
   }
 
   deleteElement() {
-    document.body.removeChild(this.el); // 要素をDOMから削除
+    document.body.removeChild(this.el);
   }
 }
 
