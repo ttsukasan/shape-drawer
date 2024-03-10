@@ -46,16 +46,18 @@ __tt.draggableCircle = class {
       zIndex: 10000000 + this.shapeId,
       cursor: 'move',
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'left',
+      alignItems: 'normal',
       userSelect: 'none',
     })
   }
 
   updateEllipseStyle() {
     Object.assign(this.ellipse.style, {
-      width: `${this.width - 15}px`,
-      height: `${this.height - 15}px`,
+      width: `${this.width - 30}px`,
+      height: `${this.height - 30}px`,
+      marginTop: '15px',
+      marginLeft: '15px',
       border: `4px solid ${this.borderColor}`,
       borderRadius: '15px',
     })
@@ -121,14 +123,14 @@ __tt.draggableCircle = class {
       const widthChange = e.clientX - this.mouseX
       const heightChange = e.clientY - this.mouseY
       this.width = Math.max(60, this.width + widthChange)
-      this.height = Math.max(20, this.height + heightChange)
+      this.height = Math.max(30, this.height + heightChange)
 
       // スタイルを更新します
       this.updateStyle()
       this.updateEllipseStyle()
 
       // 高さが一定以下の場合はdeleteBtnを非表示にする
-      if (this.height < 30) {
+      if (this.height < 40) {
         this.deleteBtn.style.visibility = 'hidden'
       } else {
         this.deleteBtn.style.visibility = 'visible'
@@ -199,7 +201,7 @@ __tt.draggableCircle = class {
     // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
       this.resizeHandle.style.visibility = 'visible'
-      if (this.height >= 30) {
+      if (this.height >= 40) {
         this.deleteBtn.style.visibility = 'visible'
       }
     })
