@@ -67,7 +67,7 @@ __tt.draggableTextarea = class {
       height: `${this.height - 30}px`,
       marginTop: '15px',
       marginLeft: '15px',
-      border: showBorder ? `2px dashed ${this.borderColor}` : `2px dashed transparent`, // ボーダーカラーを指定
+      border: showBorder ? `1px dashed ${this.borderColor}` : `1px dashed transparent`, // ボーダーカラーを指定
       borderRadius: '8px', // 角の丸みを指定
       padding: '4px', // 内部のパディングを指定
       outline: 'none', // フォーカス時のアウトラインを削除
@@ -265,7 +265,7 @@ __tt.draggableTextarea = class {
   toggleFontSize() {
     // フォントサイズを切り替える関数
     if (this.fontSize === '18px') {
-      this.fontSize = '24px'
+      this.fontSize = '36px'
     } else {
       this.fontSize = '18px'
     }
