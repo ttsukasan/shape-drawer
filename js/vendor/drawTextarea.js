@@ -211,22 +211,19 @@ __tt.draggableTextarea = class {
       // ブラウザのデフォルトの選択やドラッグ動作を抑止
       if (e.target !== this.textArea) {
         e.preventDefault()
-      }
-      // クリックされた座標と要素の左上角からの相対位置を計算
-      const rect = this.el.getBoundingClientRect()
-      this.offsetX = e.clientX - rect.left
-      this.offsetY = e.clientY - rect.top
-      this.isDragging = true
+        // クリックされた座標と要素の左上角からの相対位置を計算
+        const rect = this.el.getBoundingClientRect()
+        this.offsetX = e.clientX - rect.left
+        this.offsetY = e.clientY - rect.top
+        this.isDragging = true
 
-      // ドラッグ中の透明度の変化を追加
-      this.el.style.opacity = '0.8'
+        // ドラッグ中の透明度の変化を追加
+        this.el.style.opacity = '0.8'
+      }
     })
 
     document.addEventListener('mousemove', (e) => {
       if (this.isDragging) {
-        if (e.target === this.textArea) {
-          return
-        }
         // 移動中の要素の位置を設定
         e.preventDefault() // ドラッグ操作中のテキスト選択などを防ぐ
 
