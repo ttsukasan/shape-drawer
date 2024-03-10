@@ -13,8 +13,6 @@ __tt.draggableTextarea = class {
   boundStopResize = null
   borderColor = '#ec4899'
   textColor = '#ec4899'
-
-  handleColor = 'rgba(190,24,93,1)'
   handleGradient = 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(190,24,93,1) 60%, rgba(190,24,93,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(190,24,93,1) 75%, rgba(190,24,93,1) 85%, rgba(0,0,0,0) 85%)'
   deleteBtnBg = 'rgb(190,24,93)'
 
@@ -28,7 +26,7 @@ __tt.draggableTextarea = class {
     this.boundStopResize = null
   }
 
-  initElement(shapeId) {
+  initElement() {
     this.el = document.createElement('div')
     this.el.dataset.shapeId = this.shapeId
     this.textArea = document.createElement('textarea')
