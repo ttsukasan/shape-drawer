@@ -2,7 +2,7 @@ window.__tt ||= {}
 __tt.draggableCircle = class {
   shapeId = null
   el = null
-  ellipse = null
+  rect = null
   resizeHandle = null
   deleteBtn = null
   isDragging = false
@@ -30,11 +30,11 @@ __tt.draggableCircle = class {
   initElement() {
     this.el = document.createElement('div')
     this.el.dataset.shapeId = this.shapeId
-    this.ellipse = document.createElement('div')
+    this.rect = document.createElement('div')
     this.setPositionToScreenTopLeft()
     this.updateStyle()
-    this.updateEllipseStyle()
-    this.el.appendChild(this.ellipse)
+    this.updateRectStyle()
+    this.el.appendChild(this.rect)
     this.createDeleteBtn()
     this.el.appendChild(this.deleteBtn)
     this.createResizeHandles()
@@ -54,8 +54,8 @@ __tt.draggableCircle = class {
     })
   }
 
-  updateEllipseStyle() {
-    Object.assign(this.ellipse.style, {
+  updateRectStyle() {
+    Object.assign(this.rect.style, {
       width: `${this.width - 30}px`,
       height: `${this.height - 30}px`,
       marginTop: '15px',
@@ -129,7 +129,7 @@ __tt.draggableCircle = class {
 
       // スタイルを更新します
       this.updateStyle()
-      this.updateEllipseStyle()
+      this.updateRectStyle()
 
       // 高さが一定以下の場合はdeleteBtnを非表示にする
       if (this.height < 40) {
