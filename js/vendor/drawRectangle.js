@@ -1,7 +1,7 @@
 window.__tt ||= {}
-__tt.draggableCircle ||= class DraggableCircle {
+__tt.draggableCircle = class {
   el = null
-  handles = []
+  resizeHandle = null
   isDragging = false
   isResizing = false
   width = 200
@@ -10,6 +10,11 @@ __tt.draggableCircle ||= class DraggableCircle {
   mouseY = 0
   boundResize = null
   boundStopResize = null
+  borderColor = '#ec4899'
+  handleColor = 'rgba(190,24,93,1)'
+  handleGradient = 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(190,24,93,1) 60%, rgba(190,24,93,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(190,24,93,1) 75%, rgba(190,24,93,1) 85%, rgba(0,0,0,0) 85%)'
+  deleteBtnBg = 'rgb(190,24,93)'
+
 
   constructor() {
     this.initElement()
@@ -20,17 +25,49 @@ __tt.draggableCircle ||= class DraggableCircle {
   }
 
   initElement() {
-    this.el = document.createElement("div");
-    this.ellipse = document.createElement("div"); // 楕円要素を作成
-    this.deleteBtn = document.createElement("div"); // 削除ボタンを作成
-    // 削除ボタンのスタイルを設定
+    this.el = document.createElement('div')
+    this.ellipse = document.createElement('div')
+    this.setPositionToScreenTopLeft()
+    this.updateStyle()
+    this.updateEllipseStyle()
+    this.el.appendChild(this.ellipse)
+    this.createDeleteBtn()
+    this.el.appendChild(this.deleteBtn)
+    this.createResizeHandles()
+  }
+
+  updateStyle() {
+    Object.assign(this.el.style, {
+      width: `${this.width}px`,
+      height: `${this.height}px`,
+      position: 'absolute',
+      zIndex: '999999',
+      cursor: 'move',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      userSelect: 'none',
+    })
+  }
+
+  updateEllipseStyle() {
+    Object.assign(this.ellipse.style, {
+      width: `${this.width - 15}px`,
+      height: `${this.height - 15}px`,
+      border: `4px solid ${this.borderColor}`,
+      borderRadius: '15px'
+    })
+  }
+
+  createDeleteBtn() {
+    this.deleteBtn = document.createElement('div')
     Object.assign(this.deleteBtn.style, {
       position: 'absolute',
       top: '0',
       right: '0',
       width: '20px',
       height: '20px',
-      background: 'rgb(227, 57, 78)',
+      background: this.deleteBtnBg,
       color: 'white',
       display: 'flex',
       alignItems: 'center',
@@ -44,65 +81,26 @@ __tt.draggableCircle ||= class DraggableCircle {
     this.deleteBtn.addEventListener('click', () => {
       this.deleteElement();
     });
-
-    this.setPositionToScreenTopLeft();
-
-    // 親要素のスタイルを更新
-    this.updateStyle();
-
-    // 子要素である楕円のスタイルを更新
-    this.updateEllipseStyle();
-
-    this.el.appendChild(this.ellipse); // 楕円を親要素に追加
-    this.el.appendChild(this.deleteBtn); // 削除ボタンを親要素に追加
-    this.createResizeHandles(); // リサイズハンドルを作成
-  }
-
-
-  updateStyle() {
-    Object.assign(this.el.style, {
-      width: `${this.width}px`,
-      height: `${this.height}px`,
-      position: "absolute",
-      zIndex: "999999",
-      cursor: "move",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      userSelect: "none",
-    });
-  }
-
-  updateEllipseStyle() {
-    Object.assign(this.ellipse.style, {
-      width: "100%",
-      height: "100%",
-      border: "4px solid #EC71A1",
-      borderRadius: "15px",
-      // boxShadow: "0px 10px 30px rgba(0,0,0,0.2)"
-    });
   }
 
   createResizeHandles() {
-    const handle = document.createElement("div");
-    Object.assign(handle.style, {
+    // 単一のリサイズハンドルを生成
+    this.resizeHandle = document.createElement('div');
+    Object.assign(this.resizeHandle.style, {
       position: 'absolute',
       width: '20px',
       height: '20px',
-      bottom: '-2px',
-      right: '-2px',
-      background: 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(227,57,78,1) 60%, rgba(227,57,78,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(227,57,78,1) 75%, rgba(227,57,78,1) 85%, rgba(0,0,0,0) 85%)',
+      bottom: '0',
+      right: '0',
+      background: this.handleGradient,
       cursor: 'nwse-resize',
       visibility: 'hidden'
     });
-
-    this.handles.push(handle);
-    this.el.appendChild(handle);
-    handle.addEventListener('mousedown', (e) => {
+    this.el.appendChild(this.resizeHandle);
+    this.resizeHandle.addEventListener('mousedown', (e) => {
       this.initResize(e);
     });
   }
-
 
   initResize(e) {
     e.stopPropagation();
@@ -113,28 +111,26 @@ __tt.draggableCircle ||= class DraggableCircle {
     this.boundStopResize = this.stopResize.bind(this);
     document.addEventListener('mousemove', this.boundResize);
     document.addEventListener('mouseup', this.boundStopResize);
-    // リサイズ操作中にハンドルを表示
-    this.handles.forEach(handle => handle.style.visibility = 'visible');
+    this.resizeHandle.style.visibility = 'visible'
   }
 
   resize(e) {
     if (this.isResizing) {
       const widthChange = e.clientX - this.mouseX;
       const heightChange = e.clientY - this.mouseY;
-      this.width = Math.max(40, this.width + widthChange);
-      this.height = Math.max(8, this.height + heightChange);
+      this.width = Math.max(60, this.width + widthChange);
+      this.height = Math.max(20, this.height + heightChange);
 
       // スタイルを更新します
       this.updateStyle();
       this.updateEllipseStyle();
 
-      // 高さ20px以下の場合はdeleteBtnを非表示にする
+      // 高さが一定以下の場合はdeleteBtnを非表示にする
       if (this.height < 30) {
         this.deleteBtn.style.visibility = 'hidden';
       } else {
         this.deleteBtn.style.visibility = 'visible';
       }
-
       // 次のイベントのためにマウス位置を保持します
       this.mouseX = e.clientX;
       this.mouseY = e.clientY;
@@ -162,7 +158,6 @@ __tt.draggableCircle ||= class DraggableCircle {
     this.el.style.left = `${scrollX + 15}px`;
     this.el.style.top = `${scrollY + 15}px`;
   }
-
 
   initEvents() {
     this.el.addEventListener('mousedown', (e) => {
@@ -201,31 +196,22 @@ __tt.draggableCircle ||= class DraggableCircle {
     });
     // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
-      this.handles.forEach(handle => {
-        handle.style.visibility = 'visible';
-      });
+      this.resizeHandle.style.visibility = 'visible';
       if (this.height >= 30) {
         this.deleteBtn.style.visibility = 'visible';
       }
-
     });
     // 要素からカーソルが離れたときにリサイズハンドル・削除ボタンを隠す
     this.el.addEventListener('mouseleave', () => {
-      // リサイズ中でなければハンドルを隠す
       if (!this.isResizing) {
-        this.handles.forEach(handle => {
-          handle.style.visibility = 'hidden';
-        });
+        this.resizeHandle.style.visibility = 'hidden';
       }
       this.deleteBtn.style.visibility = 'hidden'
     });
-
   }
 
   deleteElement() {
     document.body.removeChild(this.el);
   }
 }
-
-// 新しい DraggableCircle インスタンスの作成
 __tt[`${Date.now()}`] = new __tt.draggableCircle()
