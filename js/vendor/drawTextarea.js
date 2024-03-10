@@ -1,5 +1,6 @@
 window.__tt ||= {}
 __tt.draggableTextarea = class {
+  shapeId = null
   el = null
   resizeHandle = null
   isDragging = false
@@ -18,7 +19,8 @@ __tt.draggableTextarea = class {
   deleteBtnBg = 'rgb(190,24,93)'
 
 
-  constructor() {
+  constructor(shapeId) {
+    this.shapeId = Number(shapeId)
     this.initElement()
     document.body.prepend(this.el)
     this.initEvents()
@@ -26,8 +28,9 @@ __tt.draggableTextarea = class {
     this.boundStopResize = null
   }
 
-  initElement() {
+  initElement(shapeId) {
     this.el = document.createElement('div')
+    this.el.dataset.shapeId = this.shapeId
     this.textArea = document.createElement('textarea')
     this.textArea.value = 'テキストを入力'
     this.setPositionToScreenTopLeft()
@@ -44,7 +47,7 @@ __tt.draggableTextarea = class {
       width: `${this.width}px`,
       height: `${this.height}px`,
       position: 'absolute',
-      zIndex: '999999',
+      zIndex: 10000000 + this.shapeId,
       cursor: 'move',
       display: 'flex',
       justifyContent: 'center',
@@ -232,4 +235,5 @@ __tt.draggableTextarea = class {
     document.body.removeChild(this.el)
   }
 }
-__tt[`${Date.now()}`] = new __tt.draggableTextarea()
+__tt.shapes ||= []
+__tt.shapes.push(new __tt.draggableTextarea(__tt.shapes.length + 1))
