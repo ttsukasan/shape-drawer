@@ -20,8 +20,8 @@ __tt.draggableCircle = class {
     this.initElement()
     document.body.prepend(this.el)
     this.initEvents()
-    this.boundResize = null;
-    this.boundStopResize = null;
+    this.boundResize = null
+    this.boundStopResize = null
   }
 
   initElement() {
