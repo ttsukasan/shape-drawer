@@ -16,7 +16,8 @@ __tt.draggableTextarea = class {
   borderColor = '#ec4899'
   textColor = '#ec4899'
   handleGradient = 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(190,24,93,1) 60%, rgba(190,24,93,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(190,24,93,1) 75%, rgba(190,24,93,1) 85%, rgba(0,0,0,0) 85%)'
-  deleteBtnBg = 'rgb(190,24,93)'
+  accentColor = 'rgb(190,24,93)'
+  fontSize = '18px'
 
 
   constructor(shapeId) {
@@ -40,6 +41,7 @@ __tt.draggableTextarea = class {
     this.createDeleteBtn()
     this.el.appendChild(this.deleteBtn)
     this.createResizeHandles()
+    this.createFontSizeToggle()
   }
 
   updateStyle() {
@@ -70,10 +72,37 @@ __tt.draggableTextarea = class {
       padding: '4px', // 内部のパディングを指定
       outline: 'none', // フォーカス時のアウトラインを削除
       overflow: 'hidden', // スクロールバーを非表示に
-      fontSize: '18px', // フォントサイズを大きくする
+      fontSize: this.fontSize, // フォントサイズを大きくする
       fontWeight: 'bold', // フォントを太字にする
       background: 'transparent', // 背景色を透過に設定
       textShadow: '1px 1px 0px #fff, -1px -1px 0px #fff, -1px 1px 0px #fff, 1px -1px 0px #fff, 1px 0px 0px #fff, -1px 0px 0px #fff, 0px 1px 0px #fff, 0px -1px 0px #fff, 0px 0px 1px #fff',
+    })
+  }
+
+  createFontSizeToggle() {
+    // フォントサイズを切り替えるボタンを生成
+    this.fontSizeToggle = document.createElement('div')
+    this.fontSizeToggle.textContent = 'A' // ボタンのテキストを変更
+    Object.assign(this.fontSizeToggle.style, {
+      position: 'absolute',
+      bottom: '0',
+      left: '0',
+      width: '20px', // ボタンの幅を設定
+      height: '20px', // ボタンの高さを設定
+      background: this.accentColor,
+      color: 'white',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      userSelect: 'none',
+      visibility: 'hidden',
+      fontSize: '16px', // ボタンのフォントサイズを設定
+    })
+    this.el.appendChild(this.fontSizeToggle)
+    // ボタンクリック時のイベントを追加
+    this.fontSizeToggle.addEventListener('click', () => {
+      this.toggleFontSize()
     })
   }
 
@@ -85,7 +114,7 @@ __tt.draggableTextarea = class {
       right: '0',
       width: '20px',
       height: '20px',
-      background: this.deleteBtnBg,
+      background: this.accentColor,
       color: 'white',
       display: 'flex',
       alignItems: 'center',
@@ -219,6 +248,7 @@ __tt.draggableTextarea = class {
     // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
       this.resizeHandle.style.visibility = 'visible'
+      this.fontSizeToggle.style.visibility = 'visible'
       this.updateTextAreaStyle(true) // マウスホバー時に枠線を表示
       if (this.height >= 40) {
         this.deleteBtn.style.visibility = 'visible'
@@ -230,8 +260,19 @@ __tt.draggableTextarea = class {
         this.resizeHandle.style.visibility = 'hidden'
         this.updateTextAreaStyle(false)
       }
+      this.fontSizeToggle.style.visibility = 'hidden'
       this.deleteBtn.style.visibility = 'hidden'
     })
+  }
+
+  toggleFontSize() {
+    // フォントサイズを切り替える関数
+    if (this.fontSize === '18px') {
+      this.fontSize = '24px'
+    } else {
+      this.fontSize = '18px'
+    }
+    this.updateTextAreaStyle()
   }
 
   deleteElement() {
