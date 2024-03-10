@@ -73,10 +73,7 @@ __tt.draggableTextarea = class {
       fontSize: '18px', // フォントサイズを大きくする
       fontWeight: 'bold', // フォントを太字にする
       background: 'transparent', // 背景色を透過に設定
-      textShadow: '1px 1px 0.5px rgba(0, 0, 0, 0.33)', // テキストに影をつける
-      WebkitTextStroke: '0.5px rgba(255, 255, 255, 0.33)',
-      textStroke: '0.5px rgba(255, 255, 255, 0.33)',
-
+      textShadow: '1px 1px 0px #fff, -1px -1px 0px #fff, -1px 1px 0px #fff, 1px -1px 0px #fff, 1px 0px 0px #fff, -1px 0px 0px #fff, 0px 1px 0px #fff, 0px -1px 0px #fff, 0px 0px 1px #fff',
     })
   }
 
