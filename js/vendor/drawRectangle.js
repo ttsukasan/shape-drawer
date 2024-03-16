@@ -5,6 +5,7 @@ __tt.draggableCircle = class {
   rect = null
   resizeHandle = null
   deleteBtn = null
+  isInteracting = false
   isDragging = false
   isResizing = false
   width = 200
@@ -14,9 +15,9 @@ __tt.draggableCircle = class {
   boundResize = null
   boundStopResize = null
   borderColor = '#ec4899'
-  handleGradient = 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(190,24,93,1) 60%, rgba(190,24,93,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(190,24,93,1) 75%, rgba(190,24,93,1) 85%, rgba(0,0,0,0) 85%)'
-  deleteBtnBg = 'rgb(190,24,93)'
-
+  accentColor = 'rgb(107, 114, 128)'
+  handleGradient = `linear-gradient(135deg, rgba(0,0,0,0) 60%, ${this.accentColor} 60%, ${this.accentColor} 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 80%, ${this.accentColor} 80%, ${this.accentColor} 90%, rgba(0,0,0,0) 90%)`
+  fontFamily = `"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif`
 
   constructor(shapeId) {
     this.shapeId = Number(shapeId)
@@ -51,11 +52,14 @@ __tt.draggableCircle = class {
       justifyContent: 'left',
       alignItems: 'normal',
       userSelect: 'none',
+      border: this.isInteracting ? `1px solid ${this.accentColor}` : `1px solid transparent`, // ボーダーカラーを指定
+      boxSizing: 'border-box',
     })
   }
 
   updateRectStyle() {
     Object.assign(this.rect.style, {
+      boxSizing: 'border-box',
       width: `${this.width - 30}px`,
       height: `${this.height - 30}px`,
       marginTop: '15px',
@@ -73,7 +77,7 @@ __tt.draggableCircle = class {
       right: '0',
       width: '20px',
       height: '20px',
-      background: this.deleteBtnBg,
+      background: this.accentColor,
       color: 'white',
       display: 'flex',
       alignItems: 'center',
@@ -82,6 +86,7 @@ __tt.draggableCircle = class {
       userSelect: 'none',
       visibility: 'hidden',
       fontSize: '24px',
+      fontFamily: this.fontFamily,
     })
     this.deleteBtn.textContent = '×'
     this.deleteBtn.addEventListener('click', () => {
@@ -128,6 +133,7 @@ __tt.draggableCircle = class {
       this.height = Math.max(30, this.height + heightChange)
 
       // スタイルを更新します
+      this.isInteracting = true
       this.updateStyle()
       this.updateRectStyle()
 
@@ -202,6 +208,8 @@ __tt.draggableCircle = class {
     })
     // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
+      this.isInteracting = true
+      this.updateStyle()
       this.resizeHandle.style.visibility = 'visible'
       if (this.height >= 40) {
         this.deleteBtn.style.visibility = 'visible'
@@ -209,6 +217,8 @@ __tt.draggableCircle = class {
     })
     // 要素からカーソルが離れたときにリサイズハンドル・削除ボタンを隠す
     this.el.addEventListener('mouseleave', () => {
+      this.isInteracting = false
+      this.updateStyle()
       if (!this.isResizing) {
         this.resizeHandle.style.visibility = 'hidden'
       }

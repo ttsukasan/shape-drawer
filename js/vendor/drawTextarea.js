@@ -5,6 +5,7 @@ __tt.draggableTextarea = class {
   textArea = null
   resizeHandle = null
   deleteBtn = null
+  isInteracting = false
   isDragging = false
   isResizing = false
   width = 200
@@ -15,10 +16,10 @@ __tt.draggableTextarea = class {
   boundStopResize = null
   borderColor = '#ec4899'
   textColor = '#ec4899'
-  handleGradient = 'linear-gradient(135deg, rgba(0,0,0,0) 60%, rgba(190,24,93,1) 60%, rgba(190,24,93,1) 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 75%, rgba(190,24,93,1) 75%, rgba(190,24,93,1) 85%, rgba(0,0,0,0) 85%)'
-  accentColor = 'rgb(190,24,93)'
+  accentColor = 'rgb(107, 114, 128)'
+  handleGradient = `linear-gradient(135deg, rgba(0,0,0,0) 60%, ${this.accentColor} 60%, ${this.accentColor} 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 80%, ${this.accentColor} 80%, ${this.accentColor} 90%, rgba(0,0,0,0) 90%)`
   fontSize = '18px'
-
+  fontFamily = `"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif`
 
   constructor(shapeId) {
     this.shapeId = Number(shapeId)
@@ -55,10 +56,12 @@ __tt.draggableTextarea = class {
       justifyContent: 'left',
       alignItems: 'normal',
       userSelect: 'none',
+      border: this.isInteracting ? `1px solid ${this.accentColor}` : `1px solid transparent`, // ボーダーカラーを指定
+      boxSizing: 'border-box',
     })
   }
 
-  updateTextAreaStyle(showBorder = false) {
+  updateTextAreaStyle() {
     Object.assign(this.textArea.style, {
       color: this.textColor, // テキストエリアの文字色を設定
       resize: 'none', // リサイズハンドルを非表示に
@@ -67,15 +70,18 @@ __tt.draggableTextarea = class {
       height: `${this.height - 30}px`,
       marginTop: '15px',
       marginLeft: '15px',
-      border: showBorder ? `1px dashed ${this.borderColor}` : `1px dashed transparent`, // ボーダーカラーを指定
+      border: this.isInteracting ? `1px dashed ${this.borderColor}` : `1px dashed transparent`, // ボーダーカラーを指定
       borderRadius: '8px', // 角の丸みを指定
       padding: '4px', // 内部のパディングを指定
       outline: 'none', // フォーカス時のアウトラインを削除
       overflow: 'hidden', // スクロールバーを非表示に
       fontSize: this.fontSize, // フォントサイズを大きくする
       fontWeight: 'bold', // フォントを太字にする
+      fontFamily: this.fontFamily,
+      lineHeight: '1.3',
       background: 'transparent', // 背景色を透過に設定
       textShadow: '1px 1px 0px #fff, -1px -1px 0px #fff, -1px 1px 0px #fff, 1px -1px 0px #fff, 1px 0px 0px #fff, -1px 0px 0px #fff, 0px 1px 0px #fff, 0px -1px 0px #fff, 0px 0px 1px #fff',
+      boxShadow: 'none', // ボックスシャドウを削除
     })
   }
 
@@ -98,6 +104,7 @@ __tt.draggableTextarea = class {
       userSelect: 'none',
       visibility: 'hidden',
       fontSize: '16px', // ボタンのフォントサイズを設定
+      fontFamily: this.fontFamily,
     })
     this.el.appendChild(this.fontSizeToggle)
     // ボタンクリック時のイベントを追加
@@ -123,6 +130,7 @@ __tt.draggableTextarea = class {
       userSelect: 'none',
       visibility: 'hidden',
       fontSize: '24px',
+      fontFamily: this.fontFamily,
     })
     this.deleteBtn.textContent = '×'
     this.deleteBtn.addEventListener('click', () => {
@@ -169,8 +177,9 @@ __tt.draggableTextarea = class {
       this.height = Math.max(80, this.height + heightChange)
 
       // スタイルを更新します
+      this.isInteracting = true
       this.updateStyle()
-      this.updateTextAreaStyle(true)
+      this.updateTextAreaStyle()
 
       // 高さが一定以下の場合はdeleteBtnを非表示にする
       if (this.height < 40) {
@@ -209,17 +218,17 @@ __tt.draggableTextarea = class {
   initEvents() {
     this.el.addEventListener('mousedown', (e) => {
       // ブラウザのデフォルトの選択やドラッグ動作を抑止
-      if (e.target !== this.textArea) {
-        e.preventDefault()
-        // クリックされた座標と要素の左上角からの相対位置を計算
-        const rect = this.el.getBoundingClientRect()
-        this.offsetX = e.clientX - rect.left
-        this.offsetY = e.clientY - rect.top
-        this.isDragging = true
+      if (e.target === this.textArea) return void (0)
+      e.preventDefault()
 
-        // ドラッグ中の透明度の変化を追加
-        this.el.style.opacity = '0.8'
-      }
+      // クリックされた座標と要素の左上角からの相対位置を計算
+      const rect = this.el.getBoundingClientRect()
+      this.offsetX = e.clientX - rect.left
+      this.offsetY = e.clientY - rect.top
+      this.isDragging = true
+
+      // ドラッグ中の透明度の変化を追加
+      this.el.style.opacity = '0.8'
     })
 
     document.addEventListener('mousemove', (e) => {
@@ -244,18 +253,22 @@ __tt.draggableTextarea = class {
     })
     // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
     this.el.addEventListener('mouseenter', () => {
+      this.isInteracting = true
+      this.updateStyle()
+      this.updateTextAreaStyle()
       this.resizeHandle.style.visibility = 'visible'
       this.fontSizeToggle.style.visibility = 'visible'
-      this.updateTextAreaStyle(true) // マウスホバー時に枠線を表示
       if (this.height >= 40) {
         this.deleteBtn.style.visibility = 'visible'
       }
     })
     // 要素からカーソルが離れたときにリサイズハンドル・削除ボタンを隠す
     this.el.addEventListener('mouseleave', () => {
+      this.isInteracting = false
+      this.updateStyle()
+      this.updateTextAreaStyle()
       if (!this.isResizing) {
         this.resizeHandle.style.visibility = 'hidden'
-        this.updateTextAreaStyle(false)
       }
       this.fontSizeToggle.style.visibility = 'hidden'
       this.deleteBtn.style.visibility = 'hidden'
