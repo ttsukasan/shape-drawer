@@ -9,7 +9,7 @@ __tt.draggableTextarea = class {
   isDragging = false
   isResizing = false
   width = 200
-  height = 80
+  height = 90
   mouseX = 0
   mouseY = 0
   boundResize = null
@@ -81,7 +81,7 @@ __tt.draggableTextarea = class {
       fontFamily: this.fontFamily,
       lineHeight: '1.3',
       background: 'transparent', // 背景色を透過に設定
-      textShadow: '1px 1px 0px #fff, -1px -1px 0px #fff, -1px 1px 0px #fff, 1px -1px 0px #fff, 1px 0px 0px #fff, -1px 0px 0px #fff, 0px 1px 0px #fff, 0px -1px 0px #fff, 0px 0px 1px #fff',
+      textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, -2px 2px 0px #fff, 2px -2px 0px #fff, 2px 0px 0px #fff, -2px 0px 0px #fff, 0px 2px 0px #fff, 0px -2px 0px #fff, 0px 0px 2px #fff',
       boxShadow: 'none', // ボックスシャドウを削除
     })
   }
