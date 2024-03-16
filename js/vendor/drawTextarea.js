@@ -28,6 +28,7 @@ __tt.draggableTextarea = class {
     this.initEvents()
     this.boundResize = null
     this.boundStopResize = null
+    this.textArea.focus()
   }
 
   initElement() {
@@ -64,7 +65,7 @@ __tt.draggableTextarea = class {
   updateTextAreaStyle() {
     Object.assign(this.textArea.style, {
       color: this.textColor, // テキストエリアの文字色を設定
-      resize: 'none', // リサイズハンドルを非表示に
+      resize: 'none', // テキストエリアのリサイズハンドルを非表示に
       boxSizing: 'border-box', // パディングとボーダーを含めたサイズで表示
       width: `${this.width - 30}px`,
       height: `${this.height - 30}px`,
@@ -211,8 +212,8 @@ __tt.draggableTextarea = class {
     const scrollY = window.scrollY
 
     // スクロールされた状態でも画面の左上に配置
-    this.el.style.left = `${scrollX + 15}px`
-    this.el.style.top = `${scrollY + 15}px`
+    this.el.style.left = `${scrollX + 100 + ((this.shapeId - 1) * 15)}px`
+    this.el.style.top = `${scrollY + 80 + ((this.shapeId - 1) * 15)}px`
   }
 
   initEvents() {

@@ -167,8 +167,8 @@ __tt.draggableCircle = class {
     const scrollY = window.scrollY
 
     // スクロールされた状態でも画面の左上に配置
-    this.el.style.left = `${scrollX + 15}px`
-    this.el.style.top = `${scrollY + 15}px`
+    this.el.style.left = `${scrollX + 100 + ((this.shapeId - 1) * 15)}px`
+    this.el.style.top = `${scrollY + 80 + ((this.shapeId - 1) * 15)}px`
   }
 
   initEvents() {
