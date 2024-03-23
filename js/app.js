@@ -9,14 +9,19 @@ Promise.all(fileUrls.map(url =>
   // ファイルの内容が配列に格納される
   const fileContents = responses;
   const result0 = await minify(fileContents[0], {sourceMap: true});
-  // #divDrawRectangleの中の .bookmarklet を取得、ボタンを表示
-  const buttonDrawRectangle = document.getElementById('buttonDrawRectangle');
-  buttonDrawRectangle.href = `javascript:${result0.code}void(0);`;
-  buttonDrawRectangle.style.display = 'inline';
+  // スクリプトをセットしてボタンを表示
+  const drawRectangleButtons = document.getElementsByClassName('draw-rectangle');
+  for (let i = 0; i < drawRectangleButtons.length; i++) {
+    drawRectangleButtons[i].href = `javascript:${result0.code}void(0);`;
+    drawRectangleButtons[i].style.display = 'inline';
+  }
   const result1 = await minify(fileContents[1], {sourceMap: true});
-  const buttonDrawTextarea = document.getElementById('buttonDrawTextarea');
-  buttonDrawTextarea.href = `javascript:${result1.code}void(0);`;
-  buttonDrawTextarea.style.display = 'inline';
+  const drawTextareaButtons = document.getElementsByClassName('draw-textarea');
+  console.log(drawTextareaButtons)
+  for (let i = 0; i < drawTextareaButtons.length; i++) {
+    drawTextareaButtons[i].href = `javascript:${result1.code}void(0);`;
+    drawTextareaButtons[i].style.display = 'inline';
+  }
 }).catch(error => {
   console.error('ファイルを読み込めませんでした。', error);
   document.getElementById('errorAlert').style.display = 'block';

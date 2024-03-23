@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shape Drawer</title>
+  <title>Shape Drawer | もっと気軽にスクショを加工しよう</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/chota.min.css">
   <meta name="description" content="">
@@ -34,42 +34,71 @@
   </div>
 </div>
 <main class="container">
-  <h1>Shape Drawer</h1>
+  <h1>Shape Drawer ✍️</h1>
   <p>
-    ウェブブラウザ上で図形・テキストエリアを描画できるブックマークレットです。<br/>
-    スクリーンショットの中で重要な部分を強調して、より分かりやすくできます。
+    Shape Drawerはブラウザ上で図形やテキストを描画できるブックマークレットです。<br>
+    ウェブページのスクリーンショットで特定の部分を強調したり、注釈に利用してください。
   </p>
   <p>
-    SkitchやScreenPressoが持つ機能をとほぼ同じですが、ブックマークレットとして手軽に利用できます。
+    Skitchなどのキャプチャツールへのアプリの切り替えが不要、ブックマークバーから手軽に利用できます。
+  </p>
+  <div class="row">
+    <div class="col">
+      <h4>DrawRectangle</h4>
+      <p>
+        <a class="draw-rectangle button primary" style="display: none;">
+          角丸四角形を描画
+        </a>
+        <a class="draw-rectangle button primary" style="display: none;">
+          🔲
+        </a>
+      </p>
+      <p>画面上に角丸四角形を描画します。</p>
+      <ul>
+        <li>図形をドラッグして移動できます。</li>
+        <li>必要な大きさにリサイズできます。</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>DrawTextarea</h4>
+      <p>
+        <a class="draw-textarea button primary" style="display: none;">
+          テキストを描画
+        </a>
+        <a class="draw-textarea button primary" style="display: none;">
+          📝
+        </a>
+      </p>
+      <p>画面上にテキストエリアを描画します。</p>
+      <ul>
+        <li>テキストを入力し、画面に表示できます。</li>
+        <li>テキストエリアの枠をドラッグして移動できます。</li>
+        <li>リサイズや文字サイズ変更が可能です。</li>
+      </ul>
+    </div>
+  </div>
+  <p>
+
+
   </p>
   <h3>インストール</h3>
-  <p>
-    <a id="buttonDrawRectangle" class="button primary" style="display: none;">
-      角丸四角形を描画
-    </a>
-    <a id="buttonDrawTextarea" class="button primary" style="display: none;">
-      テキストを描画
-    </a>
-  </p>
-  <p>上のボタンをブックマークバーにドラッグしてください。</p>
-  <h3>使い方</h3>
-  <h4>角丸四角形を描画</h4>
-  <p>ブックマークをクリックすると、画面上に角丸四角形が描画されます。</p>
-  <ul>
-    <li>図形をドラッグすると移動できます。</li>
-    <li>図形にマウスカーソルを乗せると、リサイズ用のハンドルと削除ボタンが表示されます。</li>
-    <li>図形の右下のハンドルをドラッグするとリサイズできます。</li>
-    <li>図形の右上の削除ボタンをクリックすると消去されます。</li>
-  </ul>
-  <h4>テキストを描画</h4>
-  <p>ブックマークをクリックすると、画面上にテキストエリアが描画されます。</p>
-  <ul>
-    <li>テキストエリアの周囲をドラッグすると移動できます。</li>
-    <li>図形にマウスカーソルを乗せると、リサイズ用のハンドル・サイズ変更ボタン・削除ボタンが表示されます。</li>
-    <li>図形の右下のハンドルをドラッグするとリサイズできます。</li>
-    <li>図形の左下のサイズ変更ボタンをクリックすると文字サイズ（大・小）を切り替えます。</li>
-    <li>図形の右上の削除ボタンをクリックすると消去されます。</li>
-  </ul>
+  ご利用のブラウザのブックマークバーに登録してください。
+  <ol>
+    <li>ブックマークバーを表示します。</li>
+    <li>
+      上のボタンをブックマークバーにドラッグします。<br>
+      絵文字の方のボタンを登録するとコンパクトかもしれません。
+    </li>
+  </ol>
+  <figure>
+    <img width="600" src="./img/bookmark.gif" alt="上のボタンをブックマークバーにドラッグします">
+  </figure>
+  <footer>
+    <p class="text-center">
+      2024
+      <a href="https://twitter.com/ttsukasan">@ttsukasan</a>
+    </p>
+  </footer>
 </main>
 <script src="js/app.js"></script>
 </body>
