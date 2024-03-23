@@ -1,53 +1,57 @@
 window.__tt ||= {}
-__tt.draggableTextarea = class {
-  shapeId = null
-  el = null
-  textArea = null
-  resizeHandle = null
-  deleteBtn = null
-  isInteracting = false
-  isDragging = false
-  isResizing = false
-  width = 200
-  height = 90
-  mouseX = 0
-  mouseY = 0
-  boundResize = null
-  boundStopResize = null
-  borderColor = '#ec4899'
-  textColor = '#ec4899'
-  accentColor = 'rgb(107, 114, 128)'
-  handleGradient = `linear-gradient(135deg, rgba(0,0,0,0) 60%, ${this.accentColor} 60%, ${this.accentColor} 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 80%, ${this.accentColor} 80%, ${this.accentColor} 90%, rgba(0,0,0,0) 90%)`
-  fontSize = '18px'
-  fontFamily = `"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif`
-
+__tt.DrawTextarea = class {
   constructor(shapeId) {
     this.shapeId = Number(shapeId)
-    this.initElement()
-    document.body.prepend(this.el)
-    this.initEvents()
+    this.element = null
+    this.textArea = null
+    this.resizeHandle = null
+    this.deleteButton = null
+    this.isInteracting = false
+    this.isDragging = false
+    this.isResizing = false
+    this.width = 200
+    this.height = 90
+    this.mouseX = 0
+    this.mouseY = 0
+    this.boundResize = null
+    this.boundStopResize = null
+    this.borderColor = '#ec4899'
+    this.textColor = '#ec4899'
+    this.accentColor = 'rgb(107, 114, 128)'
+    this.handleGradient = `linear-gradient(135deg, rgba(0,0,0,0) 60%, ${this.accentColor} 60%, ${this.accentColor} 70%, rgba(0,0,0,0) 70%, rgba(0,0,0,0) 80%, ${this.accentColor} 80%, ${this.accentColor} 90%, rgba(0,0,0,0) 90%)`
+    this.fontSize = '18px'
+    this.fontFamily = `"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif`
+    this.init()
+  }
+
+  init() {
+    this.createDraggableTextareaElement()
+    document.body.prepend(this.element)
+    this.attachEvents()
     this.boundResize = null
     this.boundStopResize = null
     this.textArea.focus()
   }
 
-  initElement() {
-    this.el = document.createElement('div')
-    this.el.dataset.shapeId = this.shapeId
+  // ドラッグ可能な要素を作成する
+  createDraggableTextareaElement() {
+    this.element = document.createElement('div')
+    this.element.dataset.shapeId = this.shapeId
     this.textArea = document.createElement('textarea')
     this.textArea.placeholder = 'テキストを入力'
-    this.setPositionToScreenTopLeft()
-    this.updateStyle()
+    this.setElementPositionToTopLeft()
+    this.updateElementStyle()
     this.updateTextAreaStyle()
-    this.el.appendChild(this.textArea)
-    this.createDeleteBtn()
-    this.el.appendChild(this.deleteBtn)
-    this.createResizeHandles()
+    this.element.appendChild(this.textArea)
+    this.createDeleteButton()
+    this.element.appendChild(this.deleteButton)
+    this.createResizeHandle()
     this.createFontSizeToggle()
   }
 
-  updateStyle() {
-    Object.assign(this.el.style, {
+  // 要素のスタイルを更新する
+  updateElementStyle() {
+    Object.assign(this.element.style, {
       width: `${this.width}px`,
       height: `${this.height}px`,
       position: 'absolute',
@@ -57,45 +61,46 @@ __tt.draggableTextarea = class {
       justifyContent: 'left',
       alignItems: 'normal',
       userSelect: 'none',
-      border: this.isInteracting ? `1px solid ${this.accentColor}` : `1px solid transparent`, // ボーダーカラーを指定
+      border: this.isInteracting ? `1px solid ${this.accentColor}` : `1px solid transparent`,
       boxSizing: 'border-box',
     })
   }
 
+  // テキストエリアのスタイルを更新する
   updateTextAreaStyle() {
     Object.assign(this.textArea.style, {
-      color: this.textColor, // テキストエリアの文字色を設定
-      resize: 'none', // テキストエリアのリサイズハンドルを非表示に
-      boxSizing: 'border-box', // パディングとボーダーを含めたサイズで表示
+      color: this.textColor,
+      resize: 'none',
+      boxSizing: 'border-box',
       width: `${this.width - 30}px`,
       height: `${this.height - 30}px`,
       marginTop: '15px',
       marginLeft: '15px',
-      border: this.isInteracting ? `1px dashed ${this.borderColor}` : `1px dashed transparent`, // ボーダーカラーを指定
-      borderRadius: '8px', // 角の丸みを指定
-      padding: '4px', // 内部のパディングを指定
-      outline: 'none', // フォーカス時のアウトラインを削除
-      overflow: 'hidden', // スクロールバーを非表示に
-      fontSize: this.fontSize, // フォントサイズを大きくする
-      fontWeight: 'bold', // フォントを太字にする
+      border: this.isInteracting ? `1px dashed ${this.borderColor}` : `1px dashed transparent`,
+      borderRadius: '8px',
+      padding: '4px',
+      outline: 'none',
+      overflow: 'hidden',
+      fontSize: this.fontSize,
+      fontWeight: 'bold',
       fontFamily: this.fontFamily,
       lineHeight: '1.3',
-      background: 'transparent', // 背景色を透過に設定
+      background: 'transparent',
       textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, -2px 2px 0px #fff, 2px -2px 0px #fff, 2px 0px 0px #fff, -2px 0px 0px #fff, 0px 2px 0px #fff, 0px -2px 0px #fff, 0px 0px 2px #fff',
-      boxShadow: 'none', // ボックスシャドウを削除
+      boxShadow: 'none',
     })
   }
 
+  // フォントサイズ切り替えボタンを作成する
   createFontSizeToggle() {
-    // フォントサイズを切り替えるボタンを生成
     this.fontSizeToggle = document.createElement('div')
-    this.fontSizeToggle.textContent = 'A' // ボタンのテキストを変更
+    this.fontSizeToggle.textContent = 'A'
     Object.assign(this.fontSizeToggle.style, {
       position: 'absolute',
       bottom: '0',
       left: '0',
-      width: '20px', // ボタンの幅を設定
-      height: '20px', // ボタンの高さを設定
+      width: '20px',
+      height: '20px',
       background: this.accentColor,
       color: 'white',
       display: 'flex',
@@ -104,19 +109,19 @@ __tt.draggableTextarea = class {
       cursor: 'pointer',
       userSelect: 'none',
       visibility: 'hidden',
-      fontSize: '16px', // ボタンのフォントサイズを設定
+      fontSize: '16px',
       fontFamily: this.fontFamily,
     })
-    this.el.appendChild(this.fontSizeToggle)
-    // ボタンクリック時のイベントを追加
+    this.element.appendChild(this.fontSizeToggle)
     this.fontSizeToggle.addEventListener('click', () => {
       this.toggleFontSize()
     })
   }
 
-  createDeleteBtn() {
-    this.deleteBtn = document.createElement('div')
-    Object.assign(this.deleteBtn.style, {
+  // 削除ボタンを作成する
+  createDeleteButton() {
+    this.deleteButton = document.createElement('div')
+    Object.assign(this.deleteButton.style, {
       position: 'absolute',
       top: '0',
       right: '0',
@@ -133,14 +138,14 @@ __tt.draggableTextarea = class {
       fontSize: '24px',
       fontFamily: this.fontFamily,
     })
-    this.deleteBtn.textContent = '×'
-    this.deleteBtn.addEventListener('click', () => {
+    this.deleteButton.textContent = '×'
+    this.deleteButton.addEventListener('click', () => {
       this.deleteElement()
     })
   }
 
-  createResizeHandles() {
-    // 単一のリサイズハンドルを生成
+  // リサイズハンドルを作成する
+  createResizeHandle() {
     this.resizeHandle = document.createElement('div')
     Object.assign(this.resizeHandle.style, {
       position: 'absolute',
@@ -152,12 +157,13 @@ __tt.draggableTextarea = class {
       cursor: 'nwse-resize',
       visibility: 'hidden',
     })
-    this.el.appendChild(this.resizeHandle)
+    this.element.appendChild(this.resizeHandle)
     this.resizeHandle.addEventListener('mousedown', (e) => {
       this.initResize(e)
     })
   }
 
+  // リサイズを初期化する
   initResize(e) {
     e.stopPropagation()
     this.isResizing = true
@@ -170,125 +176,110 @@ __tt.draggableTextarea = class {
     this.resizeHandle.style.visibility = 'visible'
   }
 
+  // リサイズを実行する
   resize(e) {
     if (this.isResizing) {
       const widthChange = e.clientX - this.mouseX
       const heightChange = e.clientY - this.mouseY
       this.width = Math.max(100, this.width + widthChange)
       this.height = Math.max(80, this.height + heightChange)
-
-      // スタイルを更新します
       this.isInteracting = true
-      this.updateStyle()
+      this.updateElementStyle()
       this.updateTextAreaStyle()
-
-      // 高さが一定以下の場合はdeleteBtnを非表示にする
       if (this.height < 40) {
-        this.deleteBtn.style.visibility = 'hidden'
+        this.deleteButton.style.visibility = 'hidden'
       } else {
-        this.deleteBtn.style.visibility = 'visible'
+        this.deleteButton.style.visibility = 'visible'
       }
-      // 次のイベントのためにマウス位置を保持します
       this.mouseX = e.clientX
       this.mouseY = e.clientY
     }
   }
 
+  // リサイズを停止する
   stopResize() {
     if (this.isResizing) {
       this.isResizing = false
     }
-    // イベントハンドラの削除
     document.removeEventListener('mousemove', this.boundResize)
     document.removeEventListener('mouseup', this.boundStopResize)
-    // 参照をクリア
     this.boundResize = null
     this.boundStopResize = null
   }
 
-  setPositionToScreenTopLeft() {
-    // 現在のスクロール位置を取得
+  // 要素を画面の左上に配置する
+  setElementPositionToTopLeft() {
     const scrollX = window.scrollX
     const scrollY = window.scrollY
-
-    // スクロールされた状態でも画面の左上に配置
-    this.el.style.left = `${scrollX + 100 + ((this.shapeId - 1) * 15)}px`
-    this.el.style.top = `${scrollY + 80 + ((this.shapeId - 1) * 15)}px`
+    this.element.style.left = `${scrollX + 100 + ((this.shapeId - 1) * 15)}px`
+    this.element.style.top = `${scrollY + 80 + ((this.shapeId - 1) * 15)}px`
   }
 
-  initEvents() {
-    this.el.addEventListener('mousedown', (e) => {
-      // ブラウザのデフォルトの選択やドラッグ動作を抑止
+  // イベントをアタッチする
+  attachEvents() {
+    this.element.addEventListener('mousedown', (e) => {
+      // テキストエリアクリック時の動作は変更せず、入力に移行する
       if (e.target === this.textArea) return void (0)
       e.preventDefault()
-
-      // クリックされた座標と要素の左上角からの相対位置を計算
-      const rect = this.el.getBoundingClientRect()
+      const rect = this.element.getBoundingClientRect()
       this.offsetX = e.clientX - rect.left
       this.offsetY = e.clientY - rect.top
       this.isDragging = true
-
-      // ドラッグ中の透明度の変化を追加
-      this.el.style.opacity = '0.8'
+      this.element.style.opacity = '0.8'
     })
 
     document.addEventListener('mousemove', (e) => {
       if (this.isDragging) {
-        // 移動中の要素の位置を設定
-        e.preventDefault() // ドラッグ操作中のテキスト選択などを防ぐ
-
-        // スクロール量を加味した位置を計算
+        // ドラッグ操作中のテキスト選択などを防ぐ
+        e.preventDefault()
         const x = e.clientX - this.offsetX + window.scrollX
         const y = e.clientY - this.offsetY + window.scrollY
-
-        this.el.style.left = `${x}px`
-        this.el.style.top = `${y}px`
+        this.element.style.left = `${x}px`
+        this.element.style.top = `${y}px`
       }
     })
 
     document.addEventListener('mouseup', () => {
       if (this.isDragging) {
         this.isDragging = false
-        this.el.style.opacity = '1' // ドラッグ終了時の透明度を元に戻す
+        this.element.style.opacity = '1'
       }
     })
-    // 要素にカーソルが乗ったときにリサイズハンドル・削除ボタンを表示する
-    this.el.addEventListener('mouseenter', () => {
+
+    this.element.addEventListener('mouseenter', () => {
       this.isInteracting = true
-      this.updateStyle()
+      this.updateElementStyle()
       this.updateTextAreaStyle()
       this.resizeHandle.style.visibility = 'visible'
       this.fontSizeToggle.style.visibility = 'visible'
       if (this.height >= 40) {
-        this.deleteBtn.style.visibility = 'visible'
+        this.deleteButton.style.visibility = 'visible'
       }
     })
-    // 要素からカーソルが離れたときにリサイズハンドル・削除ボタンを隠す
-    this.el.addEventListener('mouseleave', () => {
+
+    this.element.addEventListener('mouseleave', () => {
       this.isInteracting = false
-      this.updateStyle()
+      this.updateElementStyle()
       this.updateTextAreaStyle()
       if (!this.isResizing) {
         this.resizeHandle.style.visibility = 'hidden'
       }
       this.fontSizeToggle.style.visibility = 'hidden'
-      this.deleteBtn.style.visibility = 'hidden'
+      this.deleteButton.style.visibility = 'hidden'
     })
   }
 
+  // フォントサイズを切り替える
   toggleFontSize() {
-    // フォントサイズを切り替える関数
-    if (this.fontSize === '18px') {
-      this.fontSize = '36px'
-    } else {
-      this.fontSize = '18px'
-    }
+    this.fontSize = this.fontSize === '18px' ? '36px' : '18px'
     this.updateTextAreaStyle()
   }
 
+  // 要素を削除する
   deleteElement() {
-    document.body.removeChild(this.el)
+    document.body.removeChild(this.element)
   }
 }
+
 __tt.shapes ||= []
-__tt.shapes.push(new __tt.draggableTextarea(__tt.shapes.length + 1))
+__tt.shapes.push(new __tt.DrawTextarea(__tt.shapes.length + 1))
